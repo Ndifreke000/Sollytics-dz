@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { UserMenu } from "@/components/auth/user-menu"
@@ -13,6 +13,11 @@ export function Header() {
   const pathname = usePathname()
   const { isAuthenticated } = useAuth()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   return (
     <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
@@ -47,7 +52,7 @@ export function Header() {
           >
             Live Metrics
           </Link>
-          {isAuthenticated && (
+          {isClient && isAuthenticated && (
             <>
               <Link
                 href="/query"
@@ -85,7 +90,7 @@ export function Header() {
 
           {/* Desktop auth */}
           <div className="hidden md:flex items-center gap-2">
-            {isAuthenticated ? (
+            {isClient && isAuthenticated ? (
               <UserMenu />
             ) : (
               <>
@@ -119,7 +124,7 @@ export function Header() {
             >
               Live Metrics
             </Link>
-            {isAuthenticated && (
+            {isClient && isAuthenticated && (
               <>
                 <Link
                   href="/query"
@@ -145,7 +150,7 @@ export function Header() {
               Docs
             </Link>
             <div className="pt-3 border-t">
-              {isAuthenticated ? (
+              {isClient && isAuthenticated ? (
                 <UserMenu />
               ) : (
                 <div className="space-y-2">

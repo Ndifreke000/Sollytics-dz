@@ -5,6 +5,7 @@ import { Bar, BarChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Area, 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Badge } from "@/components/ui/badge"
+import { LiveAnalysisAI } from "@/components/live-analysis-ai"
 
 interface TransactionAnalysis {
   timestamp: number
@@ -118,72 +119,97 @@ export function LiveTransactionAnalysis() {
         </Card>
       </div>
 
-      {/* TPS Chart */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Live Transaction Throughput</CardTitle>
-          <CardDescription>Transactions per second over the last 40 seconds</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ChartContainer
-            config={{
-              tps: {
-                label: "TPS",
-                color: "hsl(var(--chart-1))",
-              },
-            }}
-            className="h-[200px]"
-          >
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="time" tickFormatter={(value) => `${(20 - value) * 2}s`} />
-                <YAxis />
-                <ChartTooltip
-                  content={<ChartTooltipContent />}
-                  labelFormatter={(value) => `${(20 - value) * 2} seconds ago`}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="tps"
-                  stroke="var(--color-tps)"
-                  fill="var(--color-tps)"
-                  fillOpacity={0.3}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </ChartContainer>
-        </CardContent>
-      </Card>
+      {/* Charts and AI Analysis Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* TPS Chart */}
+        <Card className="h-[420px]">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base">Live Transaction Throughput</CardTitle>
+            <CardDescription className="text-sm">Transactions per second over the last 40 seconds</CardDescription>
+          </CardHeader>
+          <CardContent className="p-4 pt-0">
+            <ChartContainer
+              config={{
+                tps: {
+                  label: "TPS",
+                  color: "hsl(var(--chart-1))",
+                },
+              }}
+              className="h-[280px] w-full"
+            >
+              <ResponsiveContainer width="100%" height={280}>
+                <AreaChart data={chartData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis 
+                    dataKey="time" 
+                    tickFormatter={(value) => `${(20 - value) * 2}s`}
+                    fontSize={11}
+                  />
+                  <YAxis fontSize={11} />
+                  <ChartTooltip
+                    content={<ChartTooltipContent />}
+                    labelFormatter={(value) => `${(20 - value) * 2} seconds ago`}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="tps"
+                    stroke="var(--color-tps)"
+                    fill="var(--color-tps)"
+                    fillOpacity={0.3}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+          </CardContent>
+        </Card>
 
-      {/* Program Activity */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Top Program Activity</CardTitle>
-          <CardDescription>Most active programs in the current block</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ChartContainer
-            config={{
-              count: {
-                label: "Transactions",
-                color: "hsl(var(--chart-2))",
-              },
+        {/* Program Activity */}
+        <Card className="h-[420px]">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base">Top Program Activity</CardTitle>
+            <CardDescription className="text-sm">Most active programs in the current block</CardDescription>
+          </CardHeader>
+          <CardContent className="p-4 pt-0">
+            <ChartContainer
+              config={{
+                count: {
+                  label: "Transactions",
+                  color: "hsl(var(--chart-2))",
+                },
+              }}
+              className="h-[280px] w-full"
+            >
+              <ResponsiveContainer width="100%" height={280}>
+                <BarChart data={analysis[analysis.length - 1]?.topPrograms || []} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis 
+                    dataKey="name" 
+                    fontSize={11}
+                    angle={-45}
+                    textAnchor="end"
+                    height={60}
+                  />
+                  <YAxis fontSize={11} />
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <Bar dataKey="count" fill="var(--color-count)" />
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+
+        {/* AI Analysis */}
+        <div className="h-[420px]">
+          <LiveAnalysisAI 
+            data={{
+              activeTransactions: currentStats.activeTxs,
+              avgBlockTime: currentStats.avgBlockTime,
+              networkLoad: currentStats.networkLoad,
+              tpsData: chartData.map(d => d.tps)
             }}
-            className="h-[200px]"
-          >
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={analysis[analysis.length - 1]?.topPrograms || []}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <ChartTooltip content={<ChartTooltipContent />} />
-                <Bar dataKey="count" fill="var(--color-count)" />
-              </BarChart>
-            </ResponsiveContainer>
-          </ChartContainer>
-        </CardContent>
-      </Card>
+          />
+        </div>
+      </div>
     </div>
   )
 }
