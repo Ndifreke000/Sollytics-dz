@@ -14,6 +14,8 @@ import { useKeyboardShortcuts, createCommonShortcuts } from "@/hooks/use-keyboar
 export default function QueryPage() {
   const { query, setQuery, result, isExecuting, error, executeQuery, saveQuery, loadQuery } = useQueryEditor()
   const [showShortcutsHelp, setShowShortcutsHelp] = useState(false)
+  const [savedVisualizations, setSavedVisualizations] = useState<any[]>([])
+  const [savedTables, setSavedTables] = useState<any[]>([])
 
   const shortcuts = createCommonShortcuts({
     onSave: saveQuery,
@@ -27,6 +29,33 @@ export default function QueryPage() {
   const handleExecuteTemplate = (templateQuery: string) => {
     setQuery(templateQuery)
     executeQuery(templateQuery)
+  }
+
+  const handleSaveVisualization = (config: any) => {
+    const newViz = {
+      ...config,
+      queryId: Date.now().toString(),
+      query: query,
+      createdAt: new Date().toISOString()
+    }
+    setSavedVisualizations(prev => [...prev, newViz])
+    // In production, save to database
+    console.log('Saved visualization:', newViz)
+  }
+
+  const handleSaveTable = (name: string) => {
+    if (result) {
+      const newTable = {
+        id: Date.now().toString(),
+        name,
+        query,
+        result,
+        createdAt: new Date().toISOString()
+      }
+      setSavedTables(prev => [...prev, newTable])
+      // In production, save to database
+      console.log('Saved table:', newTable)
+    }
   }
 
   return (
@@ -54,7 +83,13 @@ export default function QueryPage() {
                 isExecuting={isExecuting}
               />
 
-              <QueryResults result={result} error={error} isExecuting={isExecuting} />
+              <QueryResults 
+                result={result} 
+                error={error} 
+                isExecuting={isExecuting}
+                onSaveVisualization={handleSaveVisualization}
+                onSaveTable={handleSaveTable}
+              />
             </div>
 
             {/* Sidebar */}

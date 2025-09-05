@@ -71,7 +71,8 @@
     "jsonwebtoken": "^9.0.2",
     "bcryptjs": "^2.4.3",
     "mongodb": "^6.3.0",
-    "ws": "^8.16.0"
+    "ws": "^8.16.0",
+    "html2canvas": "^1.4.1"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.5",

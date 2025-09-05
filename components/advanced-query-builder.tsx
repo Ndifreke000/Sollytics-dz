@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Textarea } from "@/components/ui/textarea"
-import { Play, Save, History, Lightbulb, Code, Zap } from "lucide-react"
+import { Play, Save, History, Lightbulb, Code, Zap, Brain } from "lucide-react"
+import { AIQueryAssistant } from "@/components/ai-query-assistant"
 
 interface QuerySuggestion {
   text: string
@@ -235,7 +236,8 @@ export function AdvancedQueryBuilder({
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="relative">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+          <div className="lg:col-span-3 relative">
           <Textarea
             ref={textareaRef}
             value={query}
@@ -277,6 +279,15 @@ export function AdvancedQueryBuilder({
               ))}
             </div>
           )}
+          </div>
+          
+          <div className="lg:col-span-1">
+            <AIQueryAssistant
+              query={query}
+              onQueryUpdate={onQueryChange}
+              onExecute={onExecute}
+            />
+          </div>
         </div>
         
         <div className="flex items-center justify-between">
