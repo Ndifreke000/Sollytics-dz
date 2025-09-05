@@ -31,13 +31,13 @@ export function SupplyChart({ supply, isLoading }: SupplyChartProps) {
       name: "Circulating",
       value: supply.circulating,
       formatted: formatSOL(supply.circulating),
-      color: "hsl(var(--chart-1))",
+      color: "#8884d8",
     },
     {
       name: "Non-Circulating",
       value: supply.nonCirculating,
       formatted: formatSOL(supply.nonCirculating),
-      color: "hsl(var(--chart-2))",
+      color: "#82ca9d",
     },
   ]
 

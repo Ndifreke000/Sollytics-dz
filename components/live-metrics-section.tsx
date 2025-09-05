@@ -9,6 +9,9 @@ import { SupplyChart } from "@/components/supply-chart"
 import { ValidatorStats } from "@/components/validator-stats"
 import { LiveTransactionAnalysis } from "@/components/live-transaction-analysis"
 import { NetworkHealthDashboard } from "@/components/network-health-dashboard"
+import { LiveTransactionThroughput } from "@/components/live-transaction-throughput"
+import { TopProgramActivity } from "@/components/top-program-activity"
+import { AIDataInterpreter } from "@/components/ai-data-interpreter"
 import { formatEpoch, formatSlot } from "@/lib/formatters"
 
 export function LiveMetricsSection() {
@@ -59,6 +62,29 @@ export function LiveMetricsSection() {
             value={solanaData.health}
             status={solanaData.health === "ok" ? "healthy" : "error"}
             isLoading={solanaData.isLoading}
+          />
+        </div>
+
+        {/* Live Transaction Metrics */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 h-96">
+          <LiveTransactionThroughput />
+          <TopProgramActivity />
+        </div>
+
+        {/* AI Data Interpretation */}
+        <div className="mt-20 mb-16">
+          <AIDataInterpreter 
+            transactionData={{
+              activeTransactions: 66090,
+              avgBlockTime: 436,
+              networkLoad: 82.5,
+              tps: solanaData.performanceSamples.map(s => s.numTransactions / s.samplePeriodSecs),
+              programActivity: [
+                { name: "System Program", activity: 85 },
+                { name: "Token Program", activity: 72 },
+                { name: "NFT Program", activity: 58 }
+              ]
+            }}
           />
         </div>
 

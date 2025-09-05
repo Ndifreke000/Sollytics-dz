@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { solanaRPC, type EpochInfo, type PerformanceSample } from "@/lib/solana"
+import { useWebSocket } from "./use-websocket"
 
 export interface SolanaMetrics {
   currentSlot: number
@@ -14,7 +15,7 @@ export interface SolanaMetrics {
   error: string | null
 }
 
-export function useSolanaData(refreshInterval = 10000) {
+export function useSolanaData(refreshInterval = 10000, useRealTime = true) {
   const [metrics, setMetrics] = useState<SolanaMetrics>({
     currentSlot: 0,
     epochInfo: null,
@@ -25,6 +26,12 @@ export function useSolanaData(refreshInterval = 10000) {
     isLoading: true,
     error: null,
   })
+
+  // WebSocket for real-time updates (fallback to mock WebSocket URL)
+  const { isConnected, lastMessage } = useWebSocket(
+    useRealTime ? "wss://api.mainnet-beta.solana.com" : "",
+    { reconnectInterval: 5000, maxReconnectAttempts: 3 }
+  )
 
   const fetchData = useCallback(async () => {
     try {
@@ -94,11 +101,23 @@ export function useSolanaData(refreshInterval = 10000) {
     }
   }, [])
 
+  // Handle real-time WebSocket messages
+  useEffect(() => {
+    if (lastMessage && lastMessage.type === "slotUpdate") {
+      setMetrics(prev => ({
+        ...prev,
+        currentSlot: lastMessage.data.slot,
+        isLoading: false
+      }))
+    }
+  }, [lastMessage])
+
   useEffect(() => {
     fetchData()
-    const interval = setInterval(fetchData, refreshInterval)
+    // Use longer intervals when WebSocket is connected
+    const interval = setInterval(fetchData, isConnected ? refreshInterval * 3 : refreshInterval)
     return () => clearInterval(interval)
-  }, [fetchData, refreshInterval])
+  }, [fetchData, refreshInterval, isConnected])
 
-  return { ...metrics, refetch: fetchData }
+  return { ...metrics, refetch: fetchData, isRealTimeConnected: isConnected }
 }

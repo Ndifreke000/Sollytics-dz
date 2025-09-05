@@ -39,9 +39,9 @@ export function NetworkHealthDashboard() {
       return {
         validatorCount: Math.floor(Math.random() * 100) + 1900, // 1900-2000 validators
         stakeDistribution: [
-          { name: "Top 10 Validators", value: 35, color: "hsl(var(--chart-1))" },
-          { name: "Top 50 Validators", value: 25, color: "hsl(var(--chart-2))" },
-          { name: "Other Validators", value: 40, color: "hsl(var(--chart-3))" },
+          { name: "Top 10 Validators", value: 35, color: "#8884d8" },
+          { name: "Top 50 Validators", value: 25, color: "#82ca9d" },
+          { name: "Other Validators", value: 40, color: "#ffc658" },
         ],
         epochProgress: Math.random() * 100,
         slotHeight: Math.floor(Math.random() * 1000000) + 364700000, // Current slot range
@@ -174,7 +174,7 @@ export function NetworkHealthDashboard() {
                     content={<ChartTooltipContent />}
                     labelFormatter={(value) => `${10 - value} minutes ago`}
                   />
-                  <Line type="monotone" dataKey="blocks" stroke="var(--color-blocks)" strokeWidth={2} />
+                  <Line type="monotone" dataKey="blocks" stroke="#ff7300" strokeWidth={2} dot={false} />
                 </LineChart>
               </ResponsiveContainer>
             </ChartContainer>

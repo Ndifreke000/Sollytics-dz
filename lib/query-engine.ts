@@ -3,6 +3,11 @@ export interface QueryResult {
   rows: any[][]
   executionTime: number
   rowCount: number
+  aiInsights?: {
+    dataPatterns: string[]
+    optimizations: string[]
+    queryPerformance: string
+  }
 }
 
 export interface SavedQuery {
@@ -92,6 +97,21 @@ class QueryEngine {
       const result = this.generateMockResult(query)
       const executionTime = Date.now() - startTime
 
+      // Generate AI insights (mock for now)
+      const aiInsights = {
+        dataPatterns: [
+          `Query returned ${result.rowCount} records`,
+          `Execution time: ${executionTime}ms`,
+          "Data shows consistent blockchain patterns"
+        ],
+        optimizations: [
+          executionTime > 1000 ? "Consider adding indexes" : "Query performance optimal",
+          "Use LIMIT clause for large datasets",
+          "Consider caching for frequently accessed data"
+        ],
+        queryPerformance: executionTime < 500 ? "excellent" : executionTime < 1000 ? "good" : "needs optimization"
+      }
+
       // Add to history
       this.queryHistory.unshift({
         id: crypto.randomUUID(),
@@ -104,6 +124,7 @@ class QueryEngine {
       return {
         ...result,
         executionTime,
+        aiInsights
       }
     } catch (error) {
       const executionTime = Date.now() - startTime
