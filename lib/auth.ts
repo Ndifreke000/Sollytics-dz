@@ -77,40 +77,77 @@ class AuthManager {
   }
 
   async login(credentials: LoginCredentials): Promise<User> {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    const { supabase } = await import('./supabase')
+    
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: credentials.email,
+      password: credentials.password,
+    })
 
-    // Mock validation
-    if (credentials.email === "demo@example.com" && credentials.password === "password") {
-      const user: User = {
-        id: "demo-user-1",
+    if (error) throw new Error(error.message)
+    if (!data.user) throw new Error("Login failed")
+
+    // Get user profile
+    const { data: profile } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', data.user.id)
+      .single()
+
+    const user: User = {
+      id: data.user.id,
+      email: data.user.email!,
+      name: profile?.name || data.user.user_metadata?.name || "User",
+      avatar: profile?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.user.email}`,
+      createdAt: new Date(profile?.created_at || data.user.created_at),
+      subscription: profile?.subscription || "free",
+      preferences: profile?.preferences || {
+        theme: "system",
+        notifications: true,
+      },
+    }
+
+    this.currentUser = user
+    this.saveUserToStorage(user)
+    this.notifyListeners()
+    return user
+  }
+
+  async signup(credentials: SignupCredentials): Promise<User> {
+    const { supabase } = await import('./supabase')
+    
+    const { data, error } = await supabase.auth.signUp({
+      email: credentials.email,
+      password: credentials.password,
+      options: {
+        data: {
+          name: credentials.name,
+        },
+      },
+    })
+
+    if (error) throw new Error(error.message)
+    if (!data.user) throw new Error("Signup failed")
+
+    // Create user profile
+    const { error: profileError } = await supabase
+      .from('users')
+      .insert({
+        id: data.user.id,
         email: credentials.email,
-        name: "Demo User",
+        name: credentials.name,
         avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${credentials.email}`,
-        createdAt: new Date("2024-01-01"),
-        subscription: "pro",
+        subscription: "free",
         preferences: {
           theme: "system",
           notifications: true,
         },
-      }
+      })
 
-      this.currentUser = user
-      this.saveUserToStorage(user)
-      this.notifyListeners()
-      return user
-    }
+    if (profileError) throw new Error(profileError.message)
 
-    throw new Error("Invalid email or password")
-  }
-
-  async signup(credentials: SignupCredentials): Promise<User> {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1200))
-
-    // Mock user creation
     const user: User = {
-      id: crypto.randomUUID(),
+      id: data.user.id,
       email: credentials.email,
       name: credentials.name,
       avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${credentials.email}`,
@@ -129,8 +166,10 @@ class AuthManager {
   }
 
   async logout(): Promise<void> {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 500))
+    const { supabase } = await import('./supabase')
+    
+    const { error } = await supabase.auth.signOut()
+    if (error) throw new Error(error.message)
 
     this.currentUser = null
     this.saveUserToStorage(null)

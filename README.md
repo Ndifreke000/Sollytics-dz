@@ -45,7 +45,7 @@ Continue building your app on:
 ### 🔧 Backend Features (Completed)
 - ✅ **Real Solana RPC integration** - Rate limiting, timeouts, error handling
 - ✅ **JWT authentication system** - Access/refresh tokens with bcrypt hashing
-- ✅ **MongoDB database** - User management, dashboard persistence, caching
+- ✅ **Supabase database** - User management, dashboard persistence, caching
 - ✅ **API rate limiting** - 100 requests/minute with IP tracking
 - ✅ **Real-time data indexing** - Caching layer with TTL for performance
 - ✅ **Query engine with AI** - Enhanced with AI insights and optimization
@@ -116,7 +116,7 @@ Sollytics-dz has successfully implemented all planned core features across front
 **Completed ✅:**
 - Real Solana RPC integration with proper error handling
 - JWT-based authentication system with refresh tokens
-- MongoDB database implementation with user management
+- Supabase database implementation with user management
 - API rate limiting and security middleware
 - Real-time data indexing and caching layer
 - Query engine with actual blockchain data processing
@@ -190,8 +190,9 @@ npm run dev:full
 Copy `.env.example` to `.env.local` and configure:
 
 ```bash
-MONGODB_URI=mongodb://localhost:27017/sollytics
-JWT_SECRET=your-super-secret-jwt-key
+VITE_SUPABASE_PROJECT_ID=yxpbcuoyahjdharayzgs
+VITE_SUPABASE_PUBLISHABLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4cGJjdW95YWhqZGhhcmF5emdzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5Njc2NzIsImV4cCI6MjA3MTU0MzY3Mn0.sH4CrEtGEnfO1ns9k6Ppt24kRG398HHznVgkX9EGlQs
+VITE_SUPABASE_URL=https://yxpbcuoyahjdharayzgs.supabase.co
 SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
 WS_PORT=8080
 ```
