@@ -96,7 +96,7 @@ export function AIDataInterpreter({ transactionData }: AIDataInterpreterProps) {
         <p className="text-sm text-muted-foreground">Analysis refreshes every 3 minutes • GPT-OSS-120B</p>
       </CardHeader>
       
-      <CardContent className="space-y-4 h-[calc(100%-120px)] overflow-y-auto">
+      <CardContent className="space-y-4 h-[calc(100%-120px)] overflow-y-auto px-3 sm:px-6">
         {isAnalyzing ? (
           <div className="flex items-center justify-center py-8">
             <div className="text-center">

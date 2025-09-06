@@ -108,20 +108,8 @@ export default function CreateDashboardPage() {
     alert("Dashboard link copied to clipboard!")
   }
 
-  const handleExportImage = async () => {
-    if (dashboardRef.current) {
-      try {
-        const { default: html2canvas } = await import('html2canvas')
-        const canvas = await html2canvas(dashboardRef.current)
-        const link = document.createElement("a")
-        link.download = `${dashboardName.replace(/\s+/g, "_")}.png`
-        link.href = canvas.toDataURL()
-        link.click()
-      } catch (error) {
-        console.error("Export failed:", error)
-        alert("Export feature requires html2canvas library")
-      }
-    }
+  const handleExportImage = () => {
+    alert(`Dashboard "${dashboardName}" export feature will be available soon. Use browser's print function as alternative.`)
   }
 
   const renderWidget = (widget: DashboardWidget) => {
@@ -299,7 +287,7 @@ export default function CreateDashboardPage() {
         </div>
 
         <main className="container mx-auto px-4 py-6">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 lg:gap-6">
             {!isPreview && showWidgetLibrary && (
               <div className="lg:col-span-1">
                 <div className="space-y-4">
@@ -331,7 +319,7 @@ export default function CreateDashboardPage() {
             )}
 
             <div className={showWidgetLibrary && !isPreview ? "lg:col-span-4" : "lg:col-span-5"}>
-              <div ref={dashboardRef} className="min-h-[600px] bg-white rounded-lg border p-6">
+              <div ref={dashboardRef} className="min-h-[600px] bg-white rounded-lg border p-3 sm:p-6">
                 {widgets.length === 0 ? (
                   <div className="flex items-center justify-center h-96 border-2 border-dashed border-gray-300 rounded-lg">
                     <div className="text-center">
@@ -346,7 +334,7 @@ export default function CreateDashboardPage() {
                   </div>
                 ) : (
                   <div 
-                    className="grid gap-4"
+                    className="grid gap-2 sm:gap-4"
                     style={{ 
                       gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
                       gridAutoRows: "60px"

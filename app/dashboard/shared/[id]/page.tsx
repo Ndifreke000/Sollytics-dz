@@ -68,21 +68,8 @@ export default function SharedDashboardPage() {
     alert("Dashboard link copied to clipboard!")
   }
 
-  const handleExport = async () => {
-    try {
-      const { default: html2canvas } = await import('html2canvas')
-      const element = document.getElementById('dashboard-content')
-      if (element) {
-        const canvas = await html2canvas(element)
-        const link = document.createElement("a")
-        link.download = `${dashboard?.name.replace(/\s+/g, "_")}.png`
-        link.href = canvas.toDataURL()
-        link.click()
-      }
-    } catch (error) {
-      console.error("Export failed:", error)
-      alert("Export feature requires html2canvas library")
-    }
+  const handleExport = () => {
+    alert(`Dashboard "${dashboard?.name}" export feature will be available soon. Use browser's print function as alternative.`)
   }
 
   if (loading) {

@@ -27,9 +27,10 @@ interface QueryResultsProps {
   isExecuting: boolean
   onSaveTable?: (name: string) => void
   onSaveVisualization?: (config: VisualizationConfig) => void
+  savedVisualizations?: VisualizationConfig[]
 }
 
-export function QueryResults({ result, error, isExecuting, onSaveTable, onSaveVisualization }: QueryResultsProps) {
+export function QueryResults({ result, error, isExecuting, onSaveTable, onSaveVisualization, savedVisualizations = [] }: QueryResultsProps) {
   const [activeTab, setActiveTab] = useState("table")
   const [tableName, setTableName] = useState("")
   const [showSaveDialog, setShowSaveDialog] = useState(false)
@@ -191,6 +192,7 @@ export function QueryResults({ result, error, isExecuting, onSaveTable, onSaveVi
             <VisualizationBuilder
               result={result}
               onSaveVisualization={handleSaveVisualization}
+              existingVisualizations={savedVisualizations}
             />
           </TabsContent>
         </Tabs>

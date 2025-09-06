@@ -120,9 +120,9 @@ export function LiveTransactionAnalysis() {
       </div>
 
       {/* Charts and AI Analysis Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
         {/* TPS Chart */}
-        <Card className="h-[420px]">
+        <Card className="h-[350px] sm:h-[420px]">
           <CardHeader className="pb-3">
             <CardTitle className="text-base">Live Transaction Throughput</CardTitle>
             <CardDescription className="text-sm">Transactions per second over the last 40 seconds</CardDescription>
@@ -135,9 +135,9 @@ export function LiveTransactionAnalysis() {
                   color: "hsl(var(--chart-1))",
                 },
               }}
-              className="h-[280px] w-full"
+              className="h-[200px] sm:h-[280px] w-full"
             >
-              <ResponsiveContainer width="100%" height={280}>
+              <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chartData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis 
@@ -164,7 +164,7 @@ export function LiveTransactionAnalysis() {
         </Card>
 
         {/* Program Activity */}
-        <Card className="h-[420px]">
+        <Card className="h-[350px] sm:h-[420px]">
           <CardHeader className="pb-3">
             <CardTitle className="text-base">Top Program Activity</CardTitle>
             <CardDescription className="text-sm">Most active programs in the current block</CardDescription>
@@ -177,9 +177,9 @@ export function LiveTransactionAnalysis() {
                   color: "hsl(var(--chart-2))",
                 },
               }}
-              className="h-[280px] w-full"
+              className="h-[200px] sm:h-[280px] w-full"
             >
-              <ResponsiveContainer width="100%" height={280}>
+              <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={analysis[analysis.length - 1]?.topPrograms || []} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis 
@@ -199,7 +199,7 @@ export function LiveTransactionAnalysis() {
         </Card>
 
         {/* AI Analysis */}
-        <div className="h-[420px]">
+        <div className="h-[350px] sm:h-[420px]">
           <LiveAnalysisAI 
             data={{
               activeTransactions: currentStats.activeTxs,

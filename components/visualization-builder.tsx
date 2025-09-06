@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { BarChart3, LineChart, PieChart, Hash, Save, Palette, Brain } from "lucide-react"
 import { ResponsiveContainer, BarChart, Bar, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts"
+import { ColorPaletteSelector } from "@/components/color-palette-selector"
 import type { QueryResult } from "@/lib/query-engine"
 
 interface VisualizationConfig {
@@ -24,6 +25,7 @@ interface VisualizationConfig {
 interface VisualizationBuilderProps {
   result: QueryResult
   onSaveVisualization: (config: VisualizationConfig) => void
+  existingVisualizations?: VisualizationConfig[]
 }
 
 const CHART_COLORS = [
@@ -38,7 +40,7 @@ const VISUALIZATION_TYPES = [
   { value: "counter", label: "Counter", icon: Hash }
 ]
 
-export function VisualizationBuilder({ result, onSaveVisualization }: VisualizationBuilderProps) {
+export function VisualizationBuilder({ result, onSaveVisualization, existingVisualizations = [] }: VisualizationBuilderProps) {
   const [config, setConfig] = useState<Partial<VisualizationConfig>>({
     type: "bar",
     yColumns: [],
@@ -252,7 +254,7 @@ export function VisualizationBuilder({ result, onSaveVisualization }: Visualizat
         )}
 
         {/* Configuration */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <Label>Visualization Type</Label>
             <Select value={config.type} onValueChange={(value: any) => updateConfig({ type: value })}>
@@ -283,7 +285,7 @@ export function VisualizationBuilder({ result, onSaveVisualization }: Visualizat
         </div>
 
         {config.type !== "counter" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <Label>X-Axis Column</Label>
               <Select value={config.xColumn} onValueChange={(value) => updateConfig({ xColumn: value })}>
@@ -300,28 +302,40 @@ export function VisualizationBuilder({ result, onSaveVisualization }: Visualizat
 
             <div>
               <Label>Y-Axis Columns</Label>
-              <div className="space-y-2">
-                <Select onValueChange={addYColumn}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Add column" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {numericColumns.filter(col => !config.yColumns.includes(col)).map(col => (
-                      <SelectItem key={col} value={col}>{col}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              <div className="space-y-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {numericColumns.filter(col => !config.yColumns.includes(col)).map(col => (
+                    <Button
+                      key={col}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => addYColumn(col)}
+                      className="justify-start text-xs"
+                    >
+                      + {col}
+                    </Button>
+                  ))}
+                </div>
                 
-                <div className="flex flex-wrap gap-2">
+                <div className="space-y-2">
                   {config.yColumns.map(col => (
-                    <Badge key={col} variant="secondary" className="gap-2">
-                      <div 
-                        className="w-3 h-3 rounded-full" 
-                        style={{ backgroundColor: config.colors[col] }}
+                    <div key={col} className="flex items-center gap-2 p-2 border rounded">
+                      <input
+                        type="color"
+                        value={config.colors[col]}
+                        onChange={(e) => updateColumnColor(col, e.target.value)}
+                        className="w-6 h-6 rounded border cursor-pointer"
                       />
-                      {col}
-                      <button onClick={() => removeYColumn(col)} className="ml-1 hover:text-destructive">×</button>
-                    </Badge>
+                      <span className="flex-1 text-sm font-medium">{col}</span>
+                      <Button
+                        onClick={() => removeYColumn(col)}
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground"
+                      >
+                        ×
+                      </Button>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -345,25 +359,38 @@ export function VisualizationBuilder({ result, onSaveVisualization }: Visualizat
           </div>
         )}
 
-        {/* Color Customization */}
+        {/* Color Palette Selector */}
         {config.yColumns.length > 0 && (
           <div>
-            <Label className="flex items-center gap-2">
-              <Palette className="w-4 h-4" />
-              Column Colors
-            </Label>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
-              {config.yColumns.map(col => (
-                <div key={col} className="flex items-center gap-2">
-                  <input
-                    type="color"
-                    value={config.colors[col]}
-                    onChange={(e) => updateColumnColor(col, e.target.value)}
-                    className="w-8 h-8 rounded border"
-                  />
-                  <span className="text-sm">{col}</span>
-                </div>
-              ))}
+            <ColorPaletteSelector
+              selectedColors={config.colors}
+              columns={config.yColumns}
+              onColorsChange={(colors) => updateConfig({ colors })}
+            />
+          </div>
+        )}
+
+        {/* Chart Options */}
+        {config.yColumns.length > 0 && (
+          <div>
+            <Label className="text-sm font-medium">Chart Options</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+              <label className="flex items-center gap-2 text-sm">
+                <input type="checkbox" className="rounded" defaultChecked />
+                Show grid lines
+              </label>
+              <label className="flex items-center gap-2 text-sm">
+                <input type="checkbox" className="rounded" defaultChecked />
+                Show legend
+              </label>
+              <label className="flex items-center gap-2 text-sm">
+                <input type="checkbox" className="rounded" />
+                Smooth curves
+              </label>
+              <label className="flex items-center gap-2 text-sm">
+                <input type="checkbox" className="rounded" />
+                Show tooltips
+              </label>
             </div>
           </div>
         )}
@@ -376,6 +403,26 @@ export function VisualizationBuilder({ result, onSaveVisualization }: Visualizat
           </div>
         </div>
 
+        {/* Existing Visualizations */}
+        {existingVisualizations.length > 0 && (
+          <div>
+            <Label>Existing Visualizations</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+              {existingVisualizations.map(viz => (
+                <Card key={viz.id} className="p-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-medium text-sm">{viz.name}</h4>
+                    <Badge variant="outline" className="text-xs">{viz.type}</Badge>
+                  </div>
+                  <div className="bg-gray-50 rounded p-2 h-16 flex items-center justify-center text-xs text-muted-foreground">
+                    {viz.type} chart preview
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Save Button */}
         <Button 
           onClick={handleSave} 
@@ -383,7 +430,7 @@ export function VisualizationBuilder({ result, onSaveVisualization }: Visualizat
           disabled={!config.title || (config.type !== "counter" && (!config.xColumn || config.yColumns.length === 0))}
         >
           <Save className="w-4 h-4" />
-          Save Visualization
+          {existingVisualizations.length > 0 ? "Add Another Visualization" : "Save Visualization"}
         </Button>
       </CardContent>
     </Card>

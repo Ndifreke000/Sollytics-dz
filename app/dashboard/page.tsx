@@ -10,6 +10,7 @@ import { DashboardTemplates } from "@/components/dashboard-templates"
 import { DashboardWidgetLibrary } from "@/components/dashboard-widget-library"
 import { DashboardTextWidget } from "@/components/dashboard-text-widget"
 import { DashboardNameDialog } from "@/components/dashboard-name-dialog"
+import { SavedQueriesDialog } from "@/components/saved-queries-dialog"
 import { useDashboard } from "@/hooks/use-dashboard"
 import { Plus, LayoutDashboard, Calendar, Users, MoreHorizontal, BarChart3, Database, Type } from "lucide-react"
 import Link from "next/link"
@@ -19,20 +20,43 @@ export default function DashboardPage() {
   const [showTemplates, setShowTemplates] = useState(false)
   const [showWidgetLibrary, setShowWidgetLibrary] = useState(false)
   const [showNameDialog, setShowNameDialog] = useState(false)
+  const [showQueriesDialog, setShowQueriesDialog] = useState(false)
   const [savedVisualizations, setSavedVisualizations] = useState<any[]>([])
   const [savedTables, setSavedTables] = useState<any[]>([])
   const [dashboardWidgets, setDashboardWidgets] = useState<any[]>([])
+  const [mockSavedQueries] = useState([
+    {
+      id: "1",
+      name: "Transaction Volume Analysis",
+      query: "SELECT DATE_TRUNC('hour', block_time) as hour, COUNT(*) as tx_count FROM transactions WHERE block_time > NOW() - INTERVAL '24 hours' GROUP BY hour ORDER BY hour DESC",
+      result: { rowCount: 24 },
+      visualizations: [{ type: "line", name: "Hourly Transactions" }, { type: "bar", name: "Volume Chart" }],
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: "2", 
+      name: "Top Validators",
+      query: "SELECT validator_identity, activated_stake, commission FROM validators ORDER BY activated_stake DESC LIMIT 20",
+      result: { rowCount: 20 },
+      visualizations: [{ type: "bar", name: "Stake Distribution" }],
+      createdAt: new Date().toISOString()
+    }
+  ])
 
   const handleCreateDashboard = () => {
     setShowNameDialog(true)
   }
 
   const handleConfirmCreate = (name: string, description: string, tags: string[]) => {
-    const dashboard = createDashboard(name, description)
+    setShowNameDialog(false)
+    setShowQueriesDialog(true)
+  }
+
+  const handleSelectQuery = (query: any) => {
+    const dashboard = createDashboard(`Dashboard for ${query.name}`, `Analytics dashboard based on ${query.name}`)
     if (dashboard) {
-      setShowNameDialog(false)
-      // Navigate to dashboard creator
-      window.location.href = `/dashboard/create?id=${dashboard.id}&name=${encodeURIComponent(name)}`
+      setShowQueriesDialog(false)
+      window.location.href = `/dashboard/create?id=${dashboard.id}&query=${query.id}`
     }
   }
 
@@ -305,6 +329,13 @@ export default function DashboardPage() {
           isOpen={showNameDialog}
           onClose={() => setShowNameDialog(false)}
           onConfirm={handleConfirmCreate}
+        />
+        
+        <SavedQueriesDialog
+          isOpen={showQueriesDialog}
+          onClose={() => setShowQueriesDialog(false)}
+          onSelectQuery={handleSelectQuery}
+          savedQueries={mockSavedQueries}
         />
       </div>
     </ProtectedRoute>

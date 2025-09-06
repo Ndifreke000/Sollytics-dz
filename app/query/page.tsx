@@ -16,6 +16,7 @@ export default function QueryPage() {
   const [showShortcutsHelp, setShowShortcutsHelp] = useState(false)
   const [savedVisualizations, setSavedVisualizations] = useState<any[]>([])
   const [savedTables, setSavedTables] = useState<any[]>([])
+  const [currentQueryVisualizations, setCurrentQueryVisualizations] = useState<any[]>([])
 
   const shortcuts = createCommonShortcuts({
     onSave: saveQuery,
@@ -28,6 +29,7 @@ export default function QueryPage() {
 
   const handleExecuteTemplate = (templateQuery: string) => {
     setQuery(templateQuery)
+    setCurrentQueryVisualizations([])
     executeQuery(templateQuery)
   }
 
@@ -39,7 +41,7 @@ export default function QueryPage() {
       createdAt: new Date().toISOString()
     }
     setSavedVisualizations(prev => [...prev, newViz])
-    // In production, save to database
+    setCurrentQueryVisualizations(prev => [...prev, newViz])
     console.log('Saved visualization:', newViz)
   }
 
@@ -89,6 +91,7 @@ export default function QueryPage() {
                 isExecuting={isExecuting}
                 onSaveVisualization={handleSaveVisualization}
                 onSaveTable={handleSaveTable}
+                savedVisualizations={currentQueryVisualizations}
               />
             </div>
 
