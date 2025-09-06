@@ -139,13 +139,14 @@ export function LiveTransactionAnalysis() {
             >
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chartData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" opacity={0.5} />
                   <XAxis 
                     dataKey="time" 
                     tickFormatter={(value) => `${(20 - value) * 2}s`}
                     fontSize={11}
+                    stroke="#64748b"
                   />
-                  <YAxis fontSize={11} />
+                  <YAxis fontSize={11} stroke="#64748b" />
                   <ChartTooltip
                     content={<ChartTooltipContent />}
                     labelFormatter={(value) => `${(20 - value) * 2} seconds ago`}
@@ -153,9 +154,10 @@ export function LiveTransactionAnalysis() {
                   <Area
                     type="monotone"
                     dataKey="tps"
-                    stroke="var(--color-tps)"
-                    fill="var(--color-tps)"
-                    fillOpacity={0.3}
+                    stroke="#3b82f6"
+                    fill="#3b82f6"
+                    fillOpacity={0.2}
+                    strokeWidth={3}
                   />
                 </AreaChart>
               </ResponsiveContainer>
@@ -181,17 +183,18 @@ export function LiveTransactionAnalysis() {
             >
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={analysis[analysis.length - 1]?.topPrograms || []} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" opacity={0.5} />
                   <XAxis 
                     dataKey="name" 
                     fontSize={11}
                     angle={-45}
                     textAnchor="end"
                     height={60}
+                    stroke="#64748b"
                   />
-                  <YAxis fontSize={11} />
+                  <YAxis fontSize={11} stroke="#64748b" />
                   <ChartTooltip content={<ChartTooltipContent />} />
-                  <Bar dataKey="count" fill="var(--color-count)" />
+                  <Bar dataKey="count" fill="#10b981" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </ChartContainer>

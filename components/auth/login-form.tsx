@@ -52,6 +52,7 @@ export function LoginForm({ onSuccess, onSwitchToSignup }: LoginFormProps) {
               <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 id="email"
+                data-testid="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -69,6 +70,7 @@ export function LoginForm({ onSuccess, onSwitchToSignup }: LoginFormProps) {
               <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 id="password"
+                data-testid="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -80,7 +82,7 @@ export function LoginForm({ onSuccess, onSwitchToSignup }: LoginFormProps) {
             </div>
           </div>
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button type="submit" data-testid="login-btn" className="w-full" disabled={isLoading}>
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

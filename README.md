@@ -196,3 +196,58 @@ VITE_SUPABASE_URL=https://yxpbcuoyahjdharayzgs.supabase.co
 SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
 WS_PORT=8080
 ```
+
+## 🗺️ Next Steps Roadmap
+
+### 🧪 Phase 1: Comprehensive Testing & Security
+- ✅ **End-to-end Testing**: Cypress test suite for critical user flows
+- ✅ **Backend Testing**: Jest/Supertest for API endpoints and WebSocket server
+- **Load Testing**: WebSocket server performance under high concurrent connections
+- **Security Audits**: Snyk/SonarQube scans for vulnerabilities and code quality
+- **Performance Monitoring**: Real-time error tracking and performance metrics
+
+### 👥 Phase 2: User Onboarding & Feedback
+- ✅ **Onboarding Wizard**: Step-by-step guide for new users (dashboard creation, query building)
+- **Feedback Collection**: In-app feedback system with PostHog/Mixpanel integration
+- **Closed Beta**: Launch with Solana community for real-world testing and feedback
+- **User Analytics**: Track feature usage and identify improvement opportunities
+
+### 📚 Phase 3: Documentation & Internal Tools
+- ✅ **Comprehensive Guides**: Expand README with tutorials (dashboard creation, query optimization)
+- ✅ **Admin Dashboard**: Monitor user activity, RPC errors, WebSocket load, and system health
+- ✅ **API Documentation**: OpenAPI/Swagger specs for all endpoints
+- **Developer Resources**: SDK examples and integration guides
+
+### 💰 Phase 4: Stablecoin Analytics (Solana-first)
+- ✅ **USDC/USDT Dashboards**: Supply tracking, inflows/outflows, mint/burn events
+- ✅ **AI Stablecoin Insights**: Risk assessment and trend analysis for stablecoin markets
+- ✅ **SPL Token Integration**: Direct Solana RPC integration for token program data
+- **Market Analysis**: Cross-exchange stablecoin flow tracking and arbitrage detection
+
+### 🔌 Phase 5: API & External Access
+- ✅ **REST API Endpoints**: `/api/queries/execute`, `/api/metrics/stablecoins`, `/api/dashboards`
+- ✅ **API Key Management**: JWT-based authentication with rate limiting and usage analytics
+- ✅ **Webhook Alerts**: Real-time notifications (TPS drops, high stablecoin redemptions, network issues)
+- **Third-party Integrations**: Slack, Discord, Telegram bot notifications
+
+### 📊 Phase 6: Spreadsheet Integration
+- ✅ **Google Sheets Plugin**: Live Solana metrics directly in spreadsheets
+- ✅ **Excel Add-in**: Native Microsoft Excel integration for blockchain data
+- ✅ **Pre-built Templates**: Ready-to-use templates for network monitoring and analysis
+- **Automated Reports**: Scheduled data exports and email reports
+
+### 🌐 Phase 7: Multi-Chain Expansion
+- ✅ **Blockchain Abstraction**: Generalized blockchain adapters (`blockchain/` module)
+- ✅ **Ethereum Support**: ethers.js + Alchemy API integration
+- ✅ **Cross-chain Dashboards**: Comparative analytics (Solana TPS vs Ethereum gas fees)
+- ✅ **Universal Query Engine**: Chain-agnostic SQL-like queries across multiple blockchains
+
+### 🎨 Phase 8: Advanced No-Code Features
+- ✅ **Visual Query Builder**: Drag-and-drop interface for non-technical users
+- ✅ **Community Marketplace**: User-generated dashboard templates and queries
+- **Advanced Widgets**: Custom visualization types and interactive components
+- **Collaboration Tools**: Real-time dashboard editing and team workspaces
+
+---
+
+*Each phase builds upon the previous one, ensuring a stable foundation while continuously expanding capabilities and user value.*

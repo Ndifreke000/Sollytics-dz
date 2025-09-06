@@ -55,13 +55,19 @@ export async function POST(request: NextRequest) {
     
     if (data.error) {
       console.error("RPC Error:", data.error)
-      return NextResponse.json(getMockDataForMethod(body.method), { status: 200 })
+      // Return actual error for connection status
+      return NextResponse.json(data, { status: 500 })
     }
 
     return NextResponse.json(data)
   } catch (error) {
     console.error("RPC Error:", error)
-    return NextResponse.json(getMockDataForMethod('fallback'), { status: 200 })
+    // Return error status to indicate connection failure
+    return NextResponse.json({ 
+      jsonrpc: "2.0", 
+      error: { code: -1, message: "RPC connection failed" }, 
+      id: 1 
+    }, { status: 503 })
   }
 }
 

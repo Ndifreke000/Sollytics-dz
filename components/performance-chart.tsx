@@ -28,7 +28,7 @@ export function PerformanceChart({ data, isLoading }: PerformanceChartProps) {
   const chartData = data
     .map((sample, index) => ({
       slot: sample.slot,
-      tps: Math.round(sample.numTransactions / sample.samplePeriodSecs),
+      tps: sample.samplePeriodSecs > 0 ? Math.round(sample.numTransactions / sample.samplePeriodSecs) : 0,
       transactions: sample.numTransactions,
       index: index,
     }))

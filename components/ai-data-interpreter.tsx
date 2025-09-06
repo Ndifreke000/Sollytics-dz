@@ -34,13 +34,14 @@ export function AIDataInterpreter({ transactionData }: AIDataInterpreterProps) {
     // Simulate AI analysis
     await new Promise(resolve => setTimeout(resolve, 2000))
     
-    const avgTps = transactionData.tps.reduce((a, b) => a + b, 0) / transactionData.tps.length
-    const tpsVariance = Math.sqrt(transactionData.tps.reduce((sum, tps) => sum + Math.pow(tps - avgTps, 2), 0) / transactionData.tps.length)
+    const validTps = transactionData.tps.filter(t => !isNaN(t) && t > 0)
+    const avgTps = validTps.length > 0 ? validTps.reduce((a, b) => a + b, 0) / validTps.length : 2500
+    const tpsVariance = validTps.length > 0 ? Math.sqrt(validTps.reduce((sum, tps) => sum + Math.pow(tps - avgTps, 2), 0) / validTps.length) : 200
     
     const mockInterpretation: AIInterpretation = {
       summary: `Network is operating at ${transactionData.networkLoad}% capacity with ${transactionData.activeTransactions.toLocaleString()} active transactions. Block time of ${transactionData.avgBlockTime}ms indicates ${transactionData.avgBlockTime < 500 ? 'optimal' : 'elevated'} network performance.`,
       insights: [
-        `TPS averaging ${Math.round(avgTps)} with ${tpsVariance > 500 ? 'high' : 'low'} volatility`,
+        `TPS averaging ${Math.round(avgTps).toLocaleString()} with ${tpsVariance > 500 ? 'high' : 'low'} volatility`,
         `System Program dominance at ${transactionData.programActivity[0]?.activity}% suggests healthy base layer activity`,
         `Network load at ${transactionData.networkLoad}% indicates ${transactionData.networkLoad > 80 ? 'near capacity' : 'moderate usage'}`
       ],
@@ -65,10 +66,10 @@ export function AIDataInterpreter({ transactionData }: AIDataInterpreterProps) {
 
   const getRiskColor = (level: string) => {
     switch (level) {
-      case "low": return "text-green-600 bg-green-100"
-      case "medium": return "text-yellow-600 bg-yellow-100"
-      case "high": return "text-red-600 bg-red-100"
-      default: return "text-gray-600 bg-gray-100"
+      case "low": return "text-emerald-700 bg-emerald-200 dark:text-emerald-300 dark:bg-emerald-800"
+      case "medium": return "text-amber-700 bg-amber-200 dark:text-amber-300 dark:bg-amber-800"
+      case "high": return "text-red-700 bg-red-200 dark:text-red-300 dark:bg-red-800"
+      default: return "text-blue-700 bg-blue-200 dark:text-blue-300 dark:bg-blue-800"
     }
   }
 
@@ -128,7 +129,7 @@ export function AIDataInterpreter({ transactionData }: AIDataInterpreterProps) {
               <ul className="space-y-1">
                 {interpretation.insights.map((insight, index) => (
                   <li key={index} className="text-sm text-muted-foreground flex items-start gap-2">
-                    <span className="w-1 h-1 bg-purple-600 rounded-full mt-2 flex-shrink-0" />
+                    <span className="w-2 h-2 bg-purple-500 rounded-full mt-1.5 flex-shrink-0" />
                     {insight}
                   </li>
                 ))}
@@ -140,7 +141,7 @@ export function AIDataInterpreter({ transactionData }: AIDataInterpreterProps) {
               <ul className="space-y-1">
                 {interpretation.recommendations.map((rec, index) => (
                   <li key={index} className="text-sm text-muted-foreground flex items-start gap-2">
-                    <span className="w-1 h-1 bg-blue-600 rounded-full mt-2 flex-shrink-0" />
+                    <span className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 flex-shrink-0" />
                     {rec}
                   </li>
                 ))}

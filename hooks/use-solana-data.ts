@@ -40,12 +40,15 @@ export function useSolanaData(refreshInterval = 10000, useRealTime = true) {
       console.log("[v0] Fetching Solana RPC data...")
 
       try {
-        const [slot, epochInfo, performanceSamples, transactionCount, health, version] = await Promise.all([
+        // Test connection first with health check
+        const health = await solanaRPC.getHealth()
+        console.log("[v0] RPC Health check:", health)
+        
+        const [slot, epochInfo, performanceSamples, transactionCount, version] = await Promise.all([
           solanaRPC.getSlot(),
           solanaRPC.getEpochInfo(),
           solanaRPC.getRecentPerformanceSamples(20),
           solanaRPC.getTransactionCount(),
-          solanaRPC.getHealth(),
           solanaRPC.getVersion(),
         ])
 
@@ -62,7 +65,8 @@ export function useSolanaData(refreshInterval = 10000, useRealTime = true) {
           error: null,
         })
       } catch (rpcError) {
-        console.log("[v0] RPC failed, using mock data for demo")
+        console.log("[v0] RPC connection failed:", rpcError)
+        console.log("[v0] Using mock data - RPC unavailable")
 
         const mockEpochInfo: EpochInfo = {
           absoluteSlot: 364708336,
@@ -85,10 +89,10 @@ export function useSolanaData(refreshInterval = 10000, useRealTime = true) {
           epochInfo: mockEpochInfo,
           performanceSamples: mockPerformanceSamples,
           transactionCount: 287654321098,
-          health: "ok",
+          health: "offline", // Mark as offline when using mock data
           version: { "solana-core": "1.18.22", "feature-set": 4215500079 },
           isLoading: false,
-          error: null,
+          error: "RPC connection unavailable - using demo data",
         })
       }
     } catch (error) {

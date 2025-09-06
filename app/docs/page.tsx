@@ -1,7 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Header } from "@/components/header"
+import { OnboardingWizard } from "@/components/onboarding-wizard"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -17,6 +18,19 @@ export default function DocsPage() {
   const [aiQuestion, setAiQuestion] = useState("")
   const [aiResponse, setAiResponse] = useState("")
   const [isAsking, setIsAsking] = useState(false)
+  const [showOnboarding, setShowOnboarding] = useState(false)
+
+  useEffect(() => {
+    const hasSeenOnboarding = localStorage.getItem('sollytics-onboarding-seen')
+    if (!hasSeenOnboarding) {
+      setShowOnboarding(true)
+    }
+  }, [])
+
+  const handleOnboardingComplete = () => {
+    localStorage.setItem('sollytics-onboarding-seen', 'true')
+    setShowOnboarding(false)
+  }
 
   const docs = [
     {
@@ -149,6 +163,7 @@ Create custom dashboards with your saved queries and visualizations.
   return (
     <div className="min-h-screen bg-background">
       <Header />
+      {showOnboarding && <OnboardingWizard onComplete={handleOnboardingComplete} />}
 
       <main className="container mx-auto px-4 py-8 max-w-7xl">
         <div className="mb-8">

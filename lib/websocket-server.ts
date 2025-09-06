@@ -1,148 +1,104 @@
-import { WebSocketServer } from 'ws'
-import { solanaRPC } from './solana'
-import { aiModel } from './ai-model'
+import WebSocket from 'ws'
 
-interface WebSocketMessage {
-  type: 'slotUpdate' | 'tpsUpdate' | 'aiAnalysis' | 'error'
-  data: any
-  timestamp: number
-}
+export class WebSocketServer {
+  private wss: WebSocket.Server
+  private clients: Set<WebSocket> = new Set()
 
-class SolanaWebSocketService {
-  private wss: WebSocketServer | null = null
-  private clients = new Set<any>()
-  private updateInterval: NodeJS.Timeout | null = null
+  constructor(port: number = 8080) {
+    this.wss = new WebSocket.Server({ port })
+    this.setupServer()
+    this.startDataBroadcast()
+  }
 
-  initialize(port: number = 8080) {
-    this.wss = new WebSocketServer({ port })
-    
+  private setupServer() {
     this.wss.on('connection', (ws) => {
       this.clients.add(ws)
       console.log('Client connected. Total clients:', this.clients.size)
-      
+
       ws.on('close', () => {
         this.clients.delete(ws)
         console.log('Client disconnected. Total clients:', this.clients.size)
       })
-      
-      ws.on('error', (error) => {
-        console.error('WebSocket error:', error)
-        this.clients.delete(ws)
+
+      // Send initial data
+      this.sendToClient(ws, {
+        type: 'connection',
+        data: { status: 'connected' },
+        timestamp: Date.now()
       })
     })
-
-    this.startDataUpdates()
   }
 
-  private startDataUpdates() {
-    // Update every 5 seconds
-    this.updateInterval = setInterval(async () => {
-      try {
-        await this.broadcastSlotUpdate()
-        await this.broadcastTpsUpdate()
-        
-        // AI analysis every 3 minutes
-        if (Date.now() % 180000 < 5000) {
-          await this.broadcastAIAnalysis()
-        }
-      } catch (error) {
-        console.error('Update error:', error)
-      }
-    }, 5000)
-  }
-
-  private async broadcastSlotUpdate() {
-    try {
-      const slot = await solanaRPC.getSlot()
-      this.broadcast({
-        type: 'slotUpdate',
-        data: { slot },
-        timestamp: Date.now()
-      })
-    } catch (error) {
-      this.broadcast({
-        type: 'error',
-        data: { message: 'Failed to fetch slot data' },
-        timestamp: Date.now()
-      })
+  private sendToClient(ws: WebSocket, message: any) {
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify(message))
     }
   }
 
-  private async broadcastTpsUpdate() {
-    try {
-      const samples = await solanaRPC.getRecentPerformanceSamples(5)
-      const tpsData = samples.map(s => ({
-        slot: s.slot,
-        tps: s.numTransactions / s.samplePeriodSecs
-      }))
-      
-      this.broadcast({
-        type: 'tpsUpdate',
-        data: { tpsData },
-        timestamp: Date.now()
-      })
-    } catch (error) {
-      console.error('TPS update error:', error)
-    }
-  }
-
-  private async broadcastAIAnalysis() {
-    try {
-      const [samples, epochInfo] = await Promise.all([
-        solanaRPC.getRecentPerformanceSamples(10),
-        solanaRPC.getEpochInfo()
-      ])
-
-      const analysis = await aiModel.analyzeBlockchainData({
-        transactionData: {
-          activeTransactions: 66090,
-          avgBlockTime: 436,
-          networkLoad: 82.5,
-          tps: samples.map(s => s.numTransactions / s.samplePeriodSecs)
-        },
-        networkMetrics: {
-          currentSlot: epochInfo.absoluteSlot,
-          validatorCount: 1847,
-          health: 'ok'
-        }
-      })
-
-      this.broadcast({
-        type: 'aiAnalysis',
-        data: analysis,
-        timestamp: Date.now()
-      })
-    } catch (error) {
-      console.error('AI analysis broadcast error:', error)
-    }
-  }
-
-  private broadcast(message: WebSocketMessage) {
-    const data = JSON.stringify(message)
-    
+  private broadcast(message: any) {
     this.clients.forEach(client => {
-      if (client.readyState === 1) { // OPEN
-        try {
-          client.send(data)
-        } catch (error) {
-          console.error('Send error:', error)
-          this.clients.delete(client)
-        }
-      }
+      this.sendToClient(client, message)
     })
   }
 
-  shutdown() {
-    if (this.updateInterval) {
-      clearInterval(this.updateInterval)
-    }
-    
-    if (this.wss) {
-      this.wss.close()
-    }
-    
-    this.clients.clear()
+  private startDataBroadcast() {
+    // Broadcast network metrics every 5 seconds
+    setInterval(() => {
+      this.broadcast({
+        type: 'network_metrics',
+        data: {
+          tps: Math.random() * 5000,
+          slot: Math.floor(Math.random() * 1000000) + 200000000,
+          blockTime: 400 + Math.random() * 200,
+          validators: 1500 + Math.random() * 100
+        },
+        timestamp: Date.now()
+      })
+    }, 5000)
+
+    // Broadcast stablecoin data every 10 seconds
+    setInterval(() => {
+      this.broadcast({
+        type: 'stablecoin_metrics',
+        data: {
+          usdc: {
+            supply: 32500000000 + (Math.random() - 0.5) * 10000000,
+            change24h: 2.1 + (Math.random() - 0.5) * 0.5
+          },
+          usdt: {
+            supply: 18200000000 + (Math.random() - 0.5) * 5000000,
+            change24h: -0.8 + (Math.random() - 0.5) * 0.3
+          }
+        },
+        timestamp: Date.now()
+      })
+    }, 10000)
+
+    // Broadcast AI insights every 30 seconds
+    setInterval(() => {
+      const insights = [
+        'Network congestion detected in DeFi protocols',
+        'Unusual validator performance patterns observed',
+        'Cross-chain bridge activity increasing',
+        'MEV bot activity spike detected',
+        'Stablecoin redemption rate normalizing'
+      ]
+      
+      this.broadcast({
+        type: 'ai_insights',
+        data: {
+          insight: insights[Math.floor(Math.random() * insights.length)],
+          confidence: 0.7 + Math.random() * 0.3,
+          riskLevel: ['low', 'medium', 'high'][Math.floor(Math.random() * 3)]
+        },
+        timestamp: Date.now()
+      })
+    }, 30000)
   }
 }
 
-export const websocketService = new SolanaWebSocketService()
+// Start server if this file is run directly
+if (require.main === module) {
+  const server = new WebSocketServer(8080)
+  console.log('WebSocket server started on port 8080')
+}

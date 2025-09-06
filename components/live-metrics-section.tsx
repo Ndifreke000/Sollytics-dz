@@ -3,6 +3,7 @@
 import { useSolanaData } from "@/hooks/use-solana-data"
 import { useSolanaSupply } from "@/hooks/use-solana-supply"
 import { useSolanaValidators } from "@/hooks/use-solana-validators"
+import { useWebSocket } from "@/hooks/use-websocket"
 import { SolanaMetricsCard } from "@/components/solana-metrics-card"
 import { PerformanceChart } from "@/components/performance-chart"
 import { SupplyChart } from "@/components/supply-chart"
@@ -18,16 +19,30 @@ export function LiveMetricsSection() {
   const solanaData = useSolanaData()
   const { supply, isLoading: supplyLoading } = useSolanaSupply()
   const { validators, isLoading: validatorsLoading } = useSolanaValidators()
+  
+  // Use actual RPC connection status
+  const isRpcConnected = solanaData.health === 'ok' && !solanaData.error
 
   return (
-    <section id="metrics" className="py-20 px-4 bg-muted/30">
+    <section id="metrics" className="py-20 px-4 bg-gradient-to-b from-background to-muted/20">
       <div className="container mx-auto max-w-7xl">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Live Network Analytics</h2>
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+              Live Network Analytics
+            </h2>
+            <div className={`w-3 h-3 rounded-full ${isRpcConnected ? 'bg-green-500' : 'bg-red-500'}`} />
+          </div>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Real-time data from the Solana mainnet, updated every few seconds to give you the most current view of
             network performance and health.
           </p>
+          <div className="flex items-center justify-center gap-2 mt-3">
+            <div className={`w-2 h-2 rounded-full ${isRpcConnected ? 'bg-green-500' : 'bg-red-500'}`} />
+            <span className="text-sm text-muted-foreground">
+              {isRpcConnected ? 'Solana RPC Connected' : 'RPC Connection Offline'}
+            </span>
+          </div>
         </div>
 
         {/* Key Metrics Grid */}
@@ -59,7 +74,7 @@ export function LiveMetricsSection() {
 
           <SolanaMetricsCard
             title="Network Health"
-            value={solanaData.health}
+            value={solanaData.health === "ok" ? "Healthy" : solanaData.health === "offline" ? "Offline" : "Unknown"}
             status={solanaData.health === "ok" ? "healthy" : "error"}
             isLoading={solanaData.isLoading}
           />
@@ -78,7 +93,7 @@ export function LiveMetricsSection() {
               activeTransactions: 66090,
               avgBlockTime: 436,
               networkLoad: 82.5,
-              tps: solanaData.performanceSamples.map(s => s.numTransactions / s.samplePeriodSecs),
+              tps: solanaData.performanceSamples.map(s => s.samplePeriodSecs > 0 ? s.numTransactions / s.samplePeriodSecs : 0),
               programActivity: [
                 { name: "System Program", activity: 85 },
                 { name: "Token Program", activity: 72 },

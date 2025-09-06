@@ -1,14 +1,35 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
-const mockData = Array.from({ length: 20 }, (_, i) => ({
-  time: `${40 - i * 2}s`,
-  tps: Math.floor(Math.random() * 4500) + 1500
-}))
-
 export function LiveTransactionThroughput() {
+  const [data, setData] = useState(() => 
+    Array.from({ length: 20 }, (_, i) => ({
+      time: `${40 - i * 2}s`,
+      tps: Math.floor(Math.random() * 3000) + 2000
+    }))
+  )
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setData(prev => {
+        const newData = [...prev.slice(1)]
+        newData.push({
+          time: '0s',
+          tps: Math.floor(Math.random() * 3000) + 2000
+        })
+        // Update time labels
+        return newData.map((item, i) => ({
+          ...item,
+          time: `${(newData.length - 1 - i) * 2}s`
+        }))
+      })
+    }, 2000)
+    return () => clearInterval(interval)
+  }, [])
+
   return (
     <Card className="h-full">
       <CardHeader className="pb-2">
@@ -17,7 +38,7 @@ export function LiveTransactionThroughput() {
       </CardHeader>
       <CardContent className="p-0 h-[calc(100%-80px)]">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={mockData} margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
+          <LineChart data={data} margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
             <XAxis 
               dataKey="time" 
               axisLine={false}
@@ -33,8 +54,8 @@ export function LiveTransactionThroughput() {
             <Line 
               type="monotone" 
               dataKey="tps" 
-              stroke="#8884d8" 
-              strokeWidth={2}
+              stroke="#3b82f6" 
+              strokeWidth={3}
               dot={false}
             />
           </LineChart>
