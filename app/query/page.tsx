@@ -3,7 +3,9 @@
 import { useState } from "react"
 import { Header } from "@/components/header"
 import { ProtectedRoute } from "@/components/protected-route"
-import { AdvancedQueryBuilder } from "@/components/advanced-query-builder"
+import { DuneQueryEditor } from "@/components/dune-query-editor"
+import { DuneVisualizationBuilder } from "@/components/dune-visualization-builder"
+import { DuneDashboardBuilder } from "@/components/dune-dashboard-builder"
 import { QueryResults } from "@/components/query-results"
 import { QueryTemplates } from "@/components/query-templates"
 import { DataExport } from "@/components/data-export"
@@ -15,8 +17,8 @@ export default function QueryPage() {
   const { query, setQuery, result, isExecuting, error, executeQuery, saveQuery, loadQuery } = useQueryEditor()
   const [showShortcutsHelp, setShowShortcutsHelp] = useState(false)
   const [savedVisualizations, setSavedVisualizations] = useState<any[]>([])
-  const [savedTables, setSavedTables] = useState<any[]>([])
-  const [currentQueryVisualizations, setCurrentQueryVisualizations] = useState<any[]>([])
+  const [savedDashboards, setSavedDashboards] = useState<any[]>([])
+  const [credits, setCredits] = useState(1000)
 
   const shortcuts = createCommonShortcuts({
     onSave: saveQuery,
@@ -77,12 +79,26 @@ export default function QueryPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Query Area */}
             <div className="lg:col-span-2 space-y-6">
-              <AdvancedQueryBuilder
+              <DuneQueryEditor
                 query={query}
                 onQueryChange={setQuery}
-                onExecute={() => executeQuery()}
+                onExecute={(cluster) => executeQuery()}
                 onSave={saveQuery}
                 isExecuting={isExecuting}
+                credits={credits}
+              />
+
+              {result && (
+                <DuneVisualizationBuilder
+                  data={result.rows}
+                  columns={result.columns}
+                  onSave={handleSaveVisualization}
+                />
+              )}
+
+              <DuneDashboardBuilder
+                savedVisualizations={savedVisualizations}
+                onSaveDashboard={(dashboard) => setSavedDashboards(prev => [...prev, dashboard])}
               />
 
               <QueryResults 

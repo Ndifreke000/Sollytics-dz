@@ -3,10 +3,13 @@ export interface QueryResult {
   rows: any[][]
   executionTime: number
   rowCount: number
+  queryId?: string
   aiInsights?: {
     dataPatterns: string[]
     optimizations: string[]
     queryPerformance: string
+    riskAssessment?: 'low' | 'medium' | 'high'
+    confidence?: number
   }
 }
 
@@ -14,8 +17,13 @@ export interface SavedQuery {
   id: string
   name: string
   query: string
+  description?: string
+  tags?: string[]
+  isPublic?: boolean
   createdAt: Date
   lastExecuted?: Date
+  executionCount?: number
+  visualizations?: VisualizationConfig[]
 }
 
 export interface QueryHistory {
@@ -25,6 +33,34 @@ export interface QueryHistory {
   executionTime: number
   success: boolean
   error?: string
+  credits?: number
+}
+
+export interface VisualizationConfig {
+  id: string
+  name: string
+  type: 'bar' | 'line' | 'area' | 'pie' | 'scatter' | 'table' | 'counter'
+  xColumn?: string
+  yColumns: string[]
+  colors: { [key: string]: string }
+  title: string
+  options?: {
+    showGrid?: boolean
+    showLegend?: boolean
+    smoothCurves?: boolean
+    showTooltips?: boolean
+    stacked?: boolean
+  }
+}
+
+export interface MaterializedView {
+  id: string
+  name: string
+  query: string
+  refreshInterval: 'manual' | 'hourly' | 'daily'
+  lastRefresh?: Date
+  nextRefresh?: Date
+  isActive: boolean
 }
 
 // Simulated query templates for Solana blockchain data
