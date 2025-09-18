@@ -39,7 +39,7 @@ Sollytics-dz follows a modern web application architecture:
 graph TD
     A[User] --> B{Next.js Frontend};
     B --> C[Next.js API Routes];
-    C --> D[Supabase (Database & Auth)];
+    C --> D["Supabase (Database & Auth)"];
     C --> E[Solana RPC];
 ```
 

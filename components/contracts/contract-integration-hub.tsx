@@ -10,6 +10,7 @@ import { DeFiIntegration } from "./defi-integration"
 import { ContractMonitoring } from "./contract-monitoring"
 import { GovernanceTracker } from "./governance-tracker"
 import { StakingCalculator } from "./staking-calculator"
+import { RealTimeContractMonitor } from "./real-time-contract-monitor"
 import { Wallet, Activity, Coins, Image, TrendingUp, Code, Vote, Calculator } from "lucide-react"
 
 export function ContractIntegrationHub() {
@@ -75,6 +76,10 @@ export function ContractIntegrationHub() {
 
         <TabsContent value="contracts" className="mt-6">
           <ContractMonitoring />
+        </TabsContent>
+
+        <TabsContent value="monitor" className="mt-6">
+          <RealTimeContractMonitor />
         </TabsContent>
 
         <TabsContent value="governance" className="mt-6">
