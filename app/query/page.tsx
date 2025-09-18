@@ -1,7 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { Header } from "@/components/header"
+import { AppShell } from "@/components/app-shell"
+import { CommandPalette } from "@/components/command-palette"
+import { QueryToDashboardFlow } from "@/components/query-to-dashboard-flow"
+import { AIAssistant } from "@/components/ai-assistant"
 import { ProtectedRoute } from "@/components/protected-route"
 import { DuneQueryEditor } from "@/components/dune-query-editor"
 import { DuneVisualizationBuilder } from "@/components/dune-visualization-builder"
@@ -19,6 +22,7 @@ export default function QueryPage() {
   const [savedVisualizations, setSavedVisualizations] = useState<any[]>([])
   const [savedDashboards, setSavedDashboards] = useState<any[]>([])
   const [credits, setCredits] = useState(1000)
+  const [currentQueryVisualizations, setCurrentQueryVisualizations] = useState<any[]>([])
 
   const shortcuts = createCommonShortcuts({
     onSave: saveQuery,
@@ -64,10 +68,9 @@ export default function QueryPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-background">
-        <Header />
-
-        <main className="container mx-auto px-4 py-8 max-w-7xl">
+      <AppShell>
+        <CommandPalette />
+        <div className="container mx-auto px-4 py-8 max-w-7xl">
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-2">Query Editor</h1>
             <p className="text-muted-foreground">
@@ -76,9 +79,9 @@ export default function QueryPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
             {/* Main Query Area */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="xl:col-span-2 space-y-6">
               <DuneQueryEditor
                 query={query}
                 onQueryChange={setQuery}
@@ -88,6 +91,13 @@ export default function QueryPage() {
                 credits={credits}
               />
 
+              <QueryToDashboardFlow
+                queryResult={result}
+                query={query}
+                onSaveVisualization={handleSaveVisualization}
+                onSaveToDashboard={(dashboardId, viz) => console.log('Save to dashboard:', dashboardId, viz)}
+              />
+
               {result && (
                 <DuneVisualizationBuilder
                   data={result.rows}
@@ -95,11 +105,6 @@ export default function QueryPage() {
                   onSave={handleSaveVisualization}
                 />
               )}
-
-              <DuneDashboardBuilder
-                savedVisualizations={savedVisualizations}
-                onSaveDashboard={(dashboard) => setSavedDashboards(prev => [...prev, dashboard])}
-              />
 
               <QueryResults 
                 result={result} 
@@ -111,8 +116,13 @@ export default function QueryPage() {
               />
             </div>
 
+            {/* AI Assistant */}
+            <div className="xl:col-span-1">
+              <AIAssistant />
+            </div>
+            
             {/* Sidebar */}
-            <div className="space-y-6">
+            <div className="xl:col-span-1 space-y-6">
               <QueryTemplates onLoadTemplate={loadQuery} onExecuteTemplate={handleExecuteTemplate} />
               
               {result && (
@@ -125,14 +135,14 @@ export default function QueryPage() {
               )}
             </div>
           </div>
-        </main>
+        </div>
         
         <KeyboardShortcutsHelp
           shortcuts={shortcuts}
           isOpen={showShortcutsHelp}
           onClose={() => setShowShortcutsHelp(false)}
         />
-      </div>
+      </AppShell>
     </ProtectedRoute>
   )
 }

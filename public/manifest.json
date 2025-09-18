@@ -1,0 +1,41 @@
+{
+  "name": "Sollytics - Solana Analytics Platform",
+  "short_name": "Sollytics",
+  "description": "Query, analyze, and visualize Solana blockchain data with real-time insights",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-512.png", 
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["finance", "productivity", "business"],
+  "shortcuts": [
+    {
+      "name": "New Query",
+      "short_name": "Query",
+      "description": "Create a new SQL query",
+      "url": "/query",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Dashboards",
+      "short_name": "Dashboards", 
+      "description": "View your dashboards",
+      "url": "/dashboard",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

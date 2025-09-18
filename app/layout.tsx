@@ -7,12 +7,21 @@ import { Suspense } from "react"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { LoadingSpinner } from "@/components/loading-states"
 import { ThemeProvider } from "@/components/theme-provider"
+import { ToastContainer } from "@/components/ui/toast"
 import "./globals.css"
 
 export const metadata: Metadata = {
   title: "Sollytics - Solana Blockchain Analytics & Visualization",
   description: "Query, analyze, and visualize Solana blockchain data with real-time insights and custom dashboards",
   generator: "v0.app",
+  manifest: "/manifest.json",
+  themeColor: "#3b82f6",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Sollytics"
+  }
 }
 
 export default function RootLayout({
@@ -33,6 +42,7 @@ export default function RootLayout({
             <Suspense fallback={<LoadingSpinner />}>
               {children}
             </Suspense>
+            <ToastContainer />
           </ErrorBoundary>
         </ThemeProvider>
         <Analytics />

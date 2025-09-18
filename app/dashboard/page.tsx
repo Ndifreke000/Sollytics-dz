@@ -1,7 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { Header } from "@/components/header"
+import { AppShell } from "@/components/app-shell"
+import { CommandPalette } from "@/components/command-palette"
+import { MobileDashboardGrid } from "@/components/mobile-dashboard-grid"
 import { ProtectedRoute } from "@/components/protected-route"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -107,27 +109,26 @@ export default function DashboardPage() {
   if (showTemplates) {
     return (
       <ProtectedRoute>
-        <div className="min-h-screen bg-background">
-          <Header />
-          <main className="container mx-auto px-4 py-8 max-w-7xl">
+        <AppShell>
+          <CommandPalette />
+          <div className="container mx-auto px-4 py-8 max-w-7xl">
             <div className="mb-6">
               <Button variant="outline" onClick={() => setShowTemplates(false)} className="mb-4">
                 ← Back to Dashboards
               </Button>
             </div>
             <DashboardTemplates onCreateFromTemplate={handleCreateFromTemplate} />
-          </main>
-        </div>
+          </div>
+        </AppShell>
       </ProtectedRoute>
     )
   }
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-background">
-        <Header />
-
-        <main className="container mx-auto px-4 py-8 max-w-7xl">
+      <AppShell>
+        <CommandPalette />
+        <div className="container mx-auto px-4 py-8 max-w-7xl">
           <div className="flex items-center justify-between mb-8">
             <div>
               <h1 className="text-3xl font-bold mb-2">Dashboards</h1>
@@ -323,7 +324,7 @@ export default function DashboardPage() {
               )}
             </div>
           </div>
-        </main>
+        </div>
         
         <DashboardNameDialog
           isOpen={showNameDialog}
@@ -337,7 +338,7 @@ export default function DashboardPage() {
           onSelectQuery={handleSelectQuery}
           savedQueries={mockSavedQueries}
         />
-      </div>
+      </AppShell>
     </ProtectedRoute>
   )
 }
