@@ -1,4 +1,4 @@
 {
-  "installCommand": "npm install --no-frozen-lockfile",
+  "installCommand": "npm install --legacy-peer-deps --no-frozen-lockfile",
   "framework": "nextjs"
 }
