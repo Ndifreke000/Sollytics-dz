@@ -1,13 +1,151 @@
-# Sollytics-dz - Solana Analytics Platform
+# 🚀 Sollytics-dz: Next-Gen Solana Analytics Platform
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
-
-A comprehensive Solana blockchain analytics and visualization platform providing real-time insights, custom dashboards, and SQL-like query capabilities for blockchain data analysis.
-
+[![Next.js](https://img.shields.io/badge/Next.js-14.x-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Solana](https://img.shields.io/badge/Solana-Network-purple?style=for-the-badge&logo=solana)](https://solana.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-Database-green?style=for-the-badge&logo=supabase)](https://supabase.com/)
+[![Tests](https://img.shields.io/badge/Tests-Jest%20%7C%20Cypress-red?style=for-the-badge&logo=jest)](https://jestjs.io/)
 [![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/ndifreke000s-projects/v0-solana-query-tool)
 [![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/projects/HxtcWeDSZVV)
 
-## Overview
+> 📊 Professional-grade analytics and visualization platform for the Solana blockchain, featuring AI-powered insights and real-time data analysis.
+
+![Sollytics Dashboard Preview](public/dashboard-preview.png)
+
+## ✨ Features
+
+### 🎯 Core Capabilities
+- **Real-time Analytics Dashboard**
+  - Live transaction monitoring
+  - Network health metrics
+  - Validator statistics
+  - Stablecoin analytics
+
+- **Advanced Query System**
+  - 🤖 AI-assisted query building
+  - 📝 Visual query constructor
+  - 💾 Query templates and sharing
+  - 🔄 Real-time data updates
+
+- **Visualization Suite**
+  - 📈 Interactive charts and graphs
+  - 🎨 Customizable dashboards
+  - 📊 Data export capabilities
+  - 🖼️ Presentation-ready visuals
+
+### 🛠️ Technical Features
+- **Modern Tech Stack**
+  - Next.js 14 with App Router
+  - TypeScript for type safety
+  - Radix UI components
+  - Supabase backend
+
+- **Developer Experience**
+  - 🧪 Comprehensive test suite (Jest + Cypress)
+  - 📝 Well-documented codebase
+  - 🔧 Easy local development
+  - ⚡ Fast build times
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 20.x or later
+- pnpm (recommended) or npm
+- Solana CLI tools (optional)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Ndifreke000/Sollytics-dz.git
+   cd Sollytics-dz
+   ```
+
+2. **Install dependencies**
+   ```bash
+   pnpm install
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env.local
+   # Edit .env.local with your configurations
+   ```
+
+4. **Run development server**
+   ```bash
+   pnpm dev
+   # or run with full stack
+   pnpm dev:full
+   ```
+
+Visit `http://localhost:3000` to see your instance running! 🎉
+
+## 📖 Documentation
+
+Detailed documentation is available in the `/docs` directory:
+- [API Reference](docs/API.md)
+- [Dashboard Guide](docs/DASHBOARD_GUIDE.md)
+- [Contributing Guidelines](CONTRIBUTING.md)
+
+## 🧪 Testing
+
+We maintain high code quality through comprehensive testing:
+
+```bash
+# Run unit tests
+pnpm test
+
+# Run tests in watch mode
+pnpm test:watch
+
+# Run E2E tests with Cypress
+pnpm cypress:run
+```
+
+## 🔐 Security
+
+Security is our top priority. The platform includes:
+- 🔒 End-to-end encryption
+- 🔑 Secure authentication
+- 🛡️ Rate limiting
+- 📝 Audit logging
+
+## 🌟 Key Components
+
+- **AI Assistant**: Intelligent query suggestions and data interpretation
+- **Visual Query Builder**: No-code query construction interface
+- **Real-time Analytics**: Live network monitoring and metrics
+- **Contract Monitoring**: Smart contract activity tracking
+- **Marketplace**: Community-driven dashboard templates and queries
+
+## 🤝 Contributing
+
+We love contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details on:
+- Code of Conduct
+- Development process
+- Pull request procedure
+- Coding standards
+
+## 📜 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Solana Foundation for blockchain infrastructure
+- Our amazing community of contributors
+- All the open-source projects that make this possible
+
+---
+
+<div align="center">
+
+**[Website](https://sollytics-dz.com)** | **[Documentation](https://docs.sollytics-dz.com)** | **[Community](https://discord.gg/sollytics)**
+
+Built with ❤️ by the Sollytics Team
+
+</div>
 
 This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
 Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).

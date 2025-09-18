@@ -21,6 +21,7 @@ export default function QueryPage() {
   const [showShortcutsHelp, setShowShortcutsHelp] = useState(false)
   const [savedVisualizations, setSavedVisualizations] = useState<any[]>([])
   const [savedDashboards, setSavedDashboards] = useState<any[]>([])
+  const [savedTables, setSavedTables] = useState<any[]>([])
   const [credits, setCredits] = useState(1000)
   const [currentQueryVisualizations, setCurrentQueryVisualizations] = useState<any[]>([])
 

@@ -15,8 +15,6 @@ export const metadata: Metadata = {
   description: "Query, analyze, and visualize Solana blockchain data with real-time insights and custom dashboards",
   generator: "v0.app",
   manifest: "/manifest.json",
-  themeColor: "#3b82f6",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
