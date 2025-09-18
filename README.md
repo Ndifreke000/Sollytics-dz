@@ -100,6 +100,10 @@ graph TD
 - `pnpm test`: Runs unit tests with Jest.
 - `pnpm cypress:open`: Opens the Cypress test runner.
 
+## Contributing
+
+We welcome contributions to Sollytics-dz! Please read our [Contributing Guide](CONTRIBUTING.md) for details on smart contract integrations, development setup, and submission guidelines.
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
